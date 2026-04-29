@@ -754,10 +754,9 @@ function triggerFlash() {
     setTimeout(() => {
       flashes.push({
         life: 0,
-        maxLife: 5 + Math.random() * 8,
-        peak: 0.04 + Math.random() * 0.07,
+        maxLife: 3 + Math.random() * 5,
+        peak: 0.14 + Math.random() * 0.2,
         r: color[0], g: color[1], b: color[2],
-        // random horizontal focus
         cx: 0.15 + Math.random() * 0.7,
       });
     }, delay);
@@ -774,7 +773,7 @@ function triggerStreak() {
     width: 0.2 + Math.random() * 0.6,
     cx: Math.random(),
     r: 0, g: 200 + Math.floor(Math.random() * 55), b: 255,
-    peak: 0.18 + Math.random() * 0.14,
+    peak: 0.52 + Math.random() * 0.36,
   });
 }
 
@@ -795,14 +794,10 @@ function drawBg() {
     const f = flashes[i];
     f.life++;
     const t = f.life / f.maxLife;
-    const alpha = (1 - t) * (1 - t) * f.peak;
+    const alpha = Math.max(0, Math.pow(1 - t, 3)) * f.peak;
     if (alpha < 0.001) { flashes.splice(i, 1); continue; }
 
-    const grd = ctx.createRadialGradient(f.cx * W, H * 0.3, 0, f.cx * W, H * 0.4, W * 0.7);
-    grd.addColorStop(0,   `rgba(${f.r},${f.g},${f.b},${alpha})`);
-    grd.addColorStop(0.4, `rgba(${f.r},${f.g},${f.b},${alpha * 0.4})`);
-    grd.addColorStop(1,   `rgba(${f.r},${f.g},${f.b},0)`);
-    ctx.fillStyle = grd;
+    ctx.fillStyle = `rgba(${f.r},${f.g},${f.b},${alpha})`;
     ctx.fillRect(0, 0, W, H);
   }
 
@@ -811,7 +806,7 @@ function drawBg() {
     const s = streaks[i];
     s.life++;
     const t = s.life / s.maxLife;
-    const alpha = (1 - t) * (1 - t) * s.peak;
+    const alpha = Math.max(0, Math.pow(1 - t, 3)) * s.peak;
     if (alpha < 0.002) { streaks.splice(i, 1); continue; }
 
     const x0 = (s.cx - s.width / 2) * W;
