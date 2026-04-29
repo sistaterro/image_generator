@@ -77,13 +77,25 @@ comfy_server/ComfyUI/custom_nodes/
 
 Install them with ComfyUI Manager or manually, following the error ComfyUI shows when loading each workflow.
 
-## Usage
+## First-Use Checklist
 
-An interactive browser checklist is available at:
+This project includes an interactive setup checklist that helps a lot during first use:
 
 ```text
 docs/checklist.html
 ```
+
+The easiest way to open it is from the project root:
+
+```bat
+docs\open_checklist.bat
+```
+
+You can also double-click `docs\open_checklist.bat` in File Explorer. The batch file lives next to `checklist.html` and opens the page in your default browser.
+
+Checklist progress is saved automatically in your browser with localStorage, so closing and reopening the page does not lose the checked items.
+
+## Usage
 
 Run the default flow:
 
