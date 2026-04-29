@@ -376,7 +376,12 @@ body.setup-complete .grid-bg {
 .check-item.done .cb svg path { stroke-dashoffset: 0; }
 
 /* â”€â”€ ITEM CONTENT â”€â”€ */
-.item-body { flex: 1; position: relative; z-index: 1; }
+.item-body {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
 .item-step {
   font-family: var(--mono);
   font-size: 9px;
@@ -491,11 +496,13 @@ a.code-tag:hover {
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
+  width: 66px;
   padding: 4px 10px;
   border: 1px solid;
   position: relative; z-index: 1;
   align-self: flex-start;
   margin-top: 2px;
+  text-align: center;
   transition: all 0.25s;
   white-space: nowrap;
 }
@@ -702,7 +709,7 @@ a.code-tag:hover {
 
   <!-- SECTION 05 - RUN AND VERIFY -->
   <div class="section-header"><span class="section-num">05</span><span class="section-name">Run and Verify</span><span class="section-line"></span></div>
-  <div class="check-item" data-id="run-default"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 13</div><div class="item-title">Run the Default Flow</div><div class="item-desc">Launch <span class="code-tag">run.bat</span> from the project root. It starts ComfyUI, waits for readiness, then runs <span class="code-tag">python main.py</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="run-default"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 13</div><div class="item-title">Run the Default Flow</div><div class="item-desc">Launch <span class="code-tag">run.bat</span> from the project root. It starts the ComfyUI server, waits for readiness, activates the project environment, and runs the default generation flow automatically.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
   <div class="check-item" data-id="run-tag"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 14</div><div class="item-title">Run a Tagged Workflow</div><div class="item-desc">Try <span class="code-tag">python main.py --tag flux</span> or pass a direct prompt with <span class="code-tag">python main.py realvis &quot;portrait photo&quot;</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
   <div class="check-item" data-id="verify-output"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 15</div><div class="item-title">Verify Saved Results</div><div class="item-desc">Confirm generated images appear in the project-level <span class="code-tag">output/</span> folder. This folder is intentionally ignored by Git.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
 
