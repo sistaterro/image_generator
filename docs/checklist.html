@@ -23,11 +23,11 @@
   --green:     #00ff88;
   --green2:    #00cc66;
   --yellow:    #ffe600;
-  --text:      #c8d8f0;
-  --text2:     #6878a0;
-  --text3:     #2a3050;
-  --border:    rgba(0,245,255,0.12);
-  --border2:   rgba(0,245,255,0.28);
+  --text:      #f1f6ff;
+  --text2:     #c0ccec;
+  --text3:     #96a5c5;
+  --border:    rgba(0,245,255,0.2);
+  --border2:   rgba(0,245,255,0.36);
   --mono:      'Share Tech Mono', monospace;
   --orb:       'Orbitron', sans-serif;
   --raj:       'Rajdhani', sans-serif;
@@ -276,7 +276,7 @@ body.setup-complete .grid-bg {
   padding: 18px 20px;
   margin-bottom: 6px;
   border: 1px solid var(--border);
-  background: rgba(0,10,30,0.6);
+  background: rgba(0,12,34,0.72);
   cursor: default;
   user-select: text;
   transition:
@@ -310,10 +310,10 @@ body.setup-complete .grid-bg {
 .check-item:hover::after { transform: scaleY(1); }
 
 .check-item:hover {
-  border-color: rgba(0,245,255,0.35);
-  background: rgba(0,20,50,0.7);
+  border-color: rgba(0,245,255,0.5);
+  background: rgba(0,24,58,0.82);
   transform: translateX(3px);
-  box-shadow: 0 0 20px rgba(0,245,255,0.06), inset 0 0 20px rgba(0,245,255,0.02);
+  box-shadow: 0 0 28px rgba(0,245,255,0.16), inset 0 0 24px rgba(0,245,255,0.05);
 }
 
 /* DONE state */
@@ -382,9 +382,10 @@ body.setup-complete .grid-bg {
   font-size: 9px;
   letter-spacing: 2px;
   color: var(--neon);
-  opacity: 0.45;
+  opacity: 0.86;
   margin-bottom: 4px;
   text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0,245,255,0.46);
 }
 .check-item.done .item-step { color: var(--green); }
 
@@ -395,25 +396,45 @@ body.setup-complete .grid-bg {
   color: var(--text);
   letter-spacing: 0.2px;
   margin-bottom: 4px;
-  transition: color 0.25s;
+  text-shadow: 0 0 12px rgba(226,236,255,0.24);
+  transition: color 0.25s, text-shadow 0.25s;
 }
 .check-item.done .item-title {
-  color: var(--text2);
+  color: #d6ffe9;
   text-decoration: line-through;
-  text-decoration-color: rgba(0,255,136,0.3);
+  text-decoration-color: rgba(0,255,136,0.45);
+  text-shadow: 0 0 12px rgba(0,255,136,0.24);
 }
-.check-item:hover .item-title { color: #fff; }
-.check-item.done:hover .item-title { color: var(--text2); }
+.check-item:hover .item-step {
+  opacity: 1;
+  color: #80fbff;
+  text-shadow: 0 0 14px rgba(0,245,255,0.8);
+}
+.check-item:hover .item-title {
+  color: #fff;
+  text-shadow: 0 0 16px rgba(226,236,255,0.46), 0 0 22px rgba(0,245,255,0.18);
+}
+.check-item.done:hover .item-title {
+  color: #f0fff7;
+  text-shadow: 0 0 16px rgba(0,255,136,0.38);
+}
 
 .item-desc {
   font-family: var(--raj);
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text3);
   line-height: 1.6;
-  transition: color 0.25s;
+  text-shadow: 0 0 10px rgba(192,204,236,0.18);
+  transition: color 0.25s, text-shadow 0.25s;
 }
-.check-item:hover .item-desc { color: var(--text2); }
-.check-item.done .item-desc { color: rgba(106,120,160,0.5); }
+.check-item:hover .item-desc {
+  color: var(--text2);
+  text-shadow: 0 0 12px rgba(192,204,236,0.24);
+}
+.check-item.done .item-desc {
+  color: #8fa7bd;
+  text-shadow: 0 0 10px rgba(0,255,136,0.12);
+}
 
 /* Code tag inside desc */
 .code-tag {
@@ -424,8 +445,15 @@ body.setup-complete .grid-bg {
   padding: 1px 7px;
   color: var(--neon);
   letter-spacing: 0.5px;
+  box-shadow: 0 0 10px rgba(0,245,255,0.08);
+  text-shadow: 0 0 8px rgba(0,245,255,0.45);
 }
-.check-item.done .code-tag { color: rgba(0,245,255,0.3); }
+.check-item.done .code-tag {
+  color: #7cf8ff;
+  border-color: rgba(0,245,255,0.32);
+  background: rgba(0,245,255,0.08);
+  text-shadow: 0 0 8px rgba(0,245,255,0.34);
+}
 
 a.code-tag {
   display: inline-block;
@@ -437,6 +465,22 @@ a.code-tag:hover {
   color: #fff;
   border-color: rgba(0,245,255,0.5);
   box-shadow: 0 0 14px rgba(0,245,255,0.18);
+}
+
+.check-item:hover .code-tag {
+  color: #bffcff;
+  border-color: rgba(0,245,255,0.5);
+  background: rgba(0,245,255,0.12);
+  box-shadow: 0 0 14px rgba(0,245,255,0.16);
+  text-shadow: 0 0 10px rgba(0,245,255,0.7);
+}
+
+.check-item:hover .badge-pending {
+  color: #fff;
+  border-color: rgba(0,245,255,0.7);
+  background: rgba(0,245,255,0.16);
+  box-shadow: 0 0 18px rgba(0,245,255,0.26), inset 0 0 12px rgba(0,245,255,0.08);
+  text-shadow: 0 0 12px rgba(0,245,255,0.85);
 }
 
 /* â”€â”€ STATUS BADGE â”€â”€ */
@@ -456,9 +500,11 @@ a.code-tag:hover {
   white-space: nowrap;
 }
 .badge-pending {
-  color: rgba(0,245,255,0.4);
-  border-color: rgba(0,245,255,0.15);
-  background: rgba(0,245,255,0.04);
+  color: rgba(0,245,255,0.88);
+  border-color: rgba(0,245,255,0.38);
+  background: rgba(0,245,255,0.1);
+  box-shadow: 0 0 12px rgba(0,245,255,0.12), inset 0 0 10px rgba(0,245,255,0.04);
+  text-shadow: 0 0 8px rgba(0,245,255,0.55);
 }
 .badge-done {
   color: var(--green);
