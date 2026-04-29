@@ -2,6 +2,18 @@
 
 Image generator that starts a local ComfyUI server and runs workflows through a single Python client.
 
+## Start Here
+
+For first use, open the interactive setup checklist. It walks through the setup, model downloads, workflow checks, and first run:
+
+```bat
+docs\open_checklist.bat
+```
+
+Run that command from the project root, or double-click `docs\open_checklist.bat` in File Explorer. The checklist opens in your default browser, and its progress is saved automatically in that browser, so checked items are not lost when you close the page.
+
+Also give `AGENTS.md` to Codex or another AI assistant when asking for help with this project. It contains the project structure, workflow behavior, model policy, Git notes, and the important constraints needed to continue safely.
+
 ## Requirements
 
 - Windows
