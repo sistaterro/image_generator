@@ -43,6 +43,7 @@ The project is intended to be portable as one working block: the app code, workf
 - `run.bat`: default user entry point.
 - `shutdown_run.bat`: same generation flow plus delayed Windows shutdown.
 - `main.py`: single Python client for all workflows.
+- `docs/checklist.html`: interactive first-use checklist. Progress is stored in the browser with localStorage.
 
 There used to be one Python script per workflow. That was intentionally consolidated into `main.py`.
 

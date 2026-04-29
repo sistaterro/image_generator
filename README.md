@@ -79,6 +79,12 @@ Install them with ComfyUI Manager or manually, following the error ComfyUI shows
 
 ## Usage
 
+An interactive browser checklist is available at:
+
+```text
+docs/checklist.html
+```
+
 Run the default flow:
 
 ```bat

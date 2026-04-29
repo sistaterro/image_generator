@@ -1,0 +1,546 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Generator - Setup Checklist</title>
+<style>
+:root {
+  --bg: #070914;
+  --panel: #101522;
+  --panel2: #151c2d;
+  --text: #d7e2f2;
+  --muted: #8090aa;
+  --dim: #4c5870;
+  --accent: #37d5ff;
+  --accent2: #6df0a4;
+  --warn: #ffcb65;
+  --border: rgba(255,255,255,0.1);
+  --shadow: rgba(0,0,0,0.35);
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(55,213,255,0.18), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(109,240,164,0.12), transparent 30%),
+    var(--bg);
+}
+
+.page {
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+
+.header {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 34px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.lead {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.progress-panel {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  margin: 26px 0 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(16,21,34,0.78);
+  box-shadow: 0 20px 60px var(--shadow);
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.progress-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.07);
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 220ms ease;
+}
+
+.section {
+  margin-top: 28px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(55,213,255,0.45), transparent);
+}
+
+.checks {
+  display: grid;
+  gap: 8px;
+}
+
+.check {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(16,21,34,0.78);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.check:hover {
+  border-color: rgba(55,213,255,0.55);
+  background: rgba(21,28,45,0.9);
+  transform: translateX(2px);
+}
+
+.check.done {
+  border-color: rgba(109,240,164,0.42);
+  background: rgba(20,42,34,0.62);
+}
+
+.box {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(55,213,255,0.55);
+  border-radius: 6px;
+  color: transparent;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.check.done .box {
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+
+.step {
+  color: var(--dim);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 3px;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.desc {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.check.done .title {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(109,240,164,0.5);
+}
+
+.tag {
+  align-self: start;
+  padding: 4px 8px;
+  border: 1px solid rgba(55,213,255,0.24);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.check.done .tag {
+  border-color: rgba(109,240,164,0.35);
+  color: var(--accent2);
+}
+
+code {
+  padding: 2px 6px;
+  border: 1px solid rgba(55,213,255,0.18);
+  border-radius: 5px;
+  color: #b7f2ff;
+  background: rgba(55,213,255,0.08);
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.92em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 34px;
+}
+
+button, .button-link {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  background: var(--panel);
+  padding: 10px 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+button:hover, .button-link:hover {
+  border-color: rgba(55,213,255,0.55);
+  text-decoration: none;
+}
+
+.complete {
+  display: none;
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid rgba(109,240,164,0.36);
+  border-radius: 8px;
+  color: var(--accent2);
+  background: rgba(109,240,164,0.08);
+  font-weight: 800;
+}
+
+.complete.show {
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .check {
+    grid-template-columns: 28px 1fr;
+  }
+
+  .tag {
+    grid-column: 2;
+  }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="header">
+    <div class="eyebrow">First-use setup</div>
+    <h1>Image Generator Checklist</h1>
+    <p class="lead">A browser-saved setup checklist based on the project README. Check off each item as you prepare the local ComfyUI runner, models, prompts, and workflow tags.</p>
+  </header>
+
+  <section class="progress-panel" aria-label="Checklist progress">
+    <div class="progress-row">
+      <span>Progress</span>
+      <span><span id="doneCount">0</span> / <span id="totalCount">0</span> complete</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Project Environment</h2>
+    <div class="checks">
+      <article class="check" data-id="project-python">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 01</div>
+          <div class="title">Install Python 3.11</div>
+          <div class="desc">Install Python 3.11 on Windows and verify it with <code>py -3.11 --version</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="project-env">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 02</div>
+          <div class="title">Create the project virtual environment</div>
+          <div class="desc">From the repository root, run <code>py -3.11 -m venv env</code> and activate it with <code>call env\Scripts\activate.bat</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="project-deps">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 03</div>
+          <div class="title">Install project dependencies</div>
+          <div class="desc">With the project environment active, run <code>pip install -r requirements.txt</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">ComfyUI Environment</h2>
+    <div class="checks">
+      <article class="check" data-id="comfy-env">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 04</div>
+          <div class="title">Create the ComfyUI virtual environment</div>
+          <div class="desc">Go to <code>comfy_server\ComfyUI</code>, run <code>py -3.11 -m venv env</code>, then activate it with <code>call env\Scripts\activate.bat</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="comfy-deps">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 05</div>
+          <div class="title">Install ComfyUI dependencies</div>
+          <div class="desc">Inside <code>comfy_server\ComfyUI</code>, run <code>pip install -r requirements.txt</code> with the ComfyUI environment active.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="gpu-torch">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 06</div>
+          <div class="title">Install the correct PyTorch build</div>
+          <div class="desc">If using an NVIDIA GPU, install the PyTorch build matching your CUDA setup before running ComfyUI.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Models</h2>
+    <div class="checks">
+      <article class="check" data-id="checkpoints">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 07</div>
+          <div class="title">Download checkpoint models</div>
+          <div class="desc">Place <code>juggernautXL_ragnarokBy.safetensors</code>, <code>cyberrealistic_final.safetensors</code>, and <code>realvisxlV50_v50LightningBakedvae.safetensors</code> in <code>comfy_server/ComfyUI/models/checkpoints/</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="lora-vae">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 08</div>
+          <div class="title">Download the LoRA and VAE</div>
+          <div class="desc">Place <code>p400_sdxl.safetensors</code> in <code>models/loras/</code> and <code>ae.safetensors</code> in <code>models/vae/</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="gguf-models">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 09</div>
+          <div class="title">Download Flux GGUF files</div>
+          <div class="desc">Place <code>flux1-schnell-Q4_K_S.GGUF</code> in <code>models/unet/</code> and <code>t5-v1_1-xxl-encoder-Q4_K_M.gguf</code> in <code>models/clip/</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Workflows and Prompts</h2>
+    <div class="checks">
+      <article class="check" data-id="custom-nodes">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 10</div>
+          <div class="title">Install required custom nodes</div>
+          <div class="desc">Install missing nodes under <code>comfy_server/ComfyUI/custom_nodes/</code> with ComfyUI Manager or manually based on workflow load errors.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="prompt-example">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 11</div>
+          <div class="title">Review the prompt example</div>
+          <div class="desc">Open <code>prompts/prompt_image.txt</code>. Each non-empty, non-comment line is submitted as one prompt.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="workflow-tags">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 12</div>
+          <div class="title">Review available workflow tags</div>
+          <div class="desc">Run <code>python main.py --list-tags</code> and confirm the available tags: <code>default</code>, <code>flux</code>, <code>cyberrealistic</code>, <code>realvis</code>, and <code>cozy</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Run and Verify</h2>
+    <div class="checks">
+      <article class="check" data-id="run-default">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 13</div>
+          <div class="title">Run the default flow</div>
+          <div class="desc">Launch <code>run.bat</code> from the project root. It starts ComfyUI, waits for readiness, then runs <code>python main.py</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="run-tag">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 14</div>
+          <div class="title">Run a tagged workflow</div>
+          <div class="desc">Try <code>python main.py --tag flux</code>, or pass a direct prompt with <code>python main.py realvis "portrait photo"</code>.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+
+      <article class="check" data-id="verify-output">
+        <div class="box">OK</div>
+        <div>
+          <div class="step">Step 15</div>
+          <div class="title">Verify saved results</div>
+          <div class="desc">Confirm generated images appear in the project-level <code>output/</code> folder. This folder is intentionally ignored by Git.</div>
+        </div>
+        <div class="tag">Pending</div>
+      </article>
+    </div>
+  </section>
+
+  <div class="complete" id="complete">All setup steps are complete.</div>
+
+  <div class="actions">
+    <button id="resetButton" type="button">Reset progress</button>
+    <a class="button-link" href="../README.md">Open README.md</a>
+  </div>
+</main>
+
+<script>
+const STORAGE_KEY = "imggen_setup_checklist_v2";
+const checks = [...document.querySelectorAll(".check")];
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function updateProgress() {
+  const done = checks.filter((check) => check.classList.contains("done"));
+  const pct = checks.length ? (done.length / checks.length) * 100 : 0;
+  document.getElementById("doneCount").textContent = done.length;
+  document.getElementById("totalCount").textContent = checks.length;
+  document.getElementById("progressFill").style.width = `${pct}%`;
+  document.getElementById("complete").classList.toggle("show", done.length === checks.length);
+  checks.forEach((check) => {
+    const tag = check.querySelector(".tag");
+    tag.textContent = check.classList.contains("done") ? "Done" : "Pending";
+  });
+}
+
+const state = loadState();
+
+checks.forEach((check) => {
+  if (state[check.dataset.id]) {
+    check.classList.add("done");
+  }
+
+  check.addEventListener("click", () => {
+    const nextState = loadState();
+    check.classList.toggle("done");
+    if (check.classList.contains("done")) {
+      nextState[check.dataset.id] = true;
+    } else {
+      delete nextState[check.dataset.id];
+    }
+    saveState(nextState);
+    updateProgress();
+  });
+});
+
+document.getElementById("resetButton").addEventListener("click", () => {
+  localStorage.removeItem(STORAGE_KEY);
+  checks.forEach((check) => check.classList.remove("done"));
+  updateProgress();
+});
+
+updateProgress();
+</script>
+</body>
+</html>
+
+
