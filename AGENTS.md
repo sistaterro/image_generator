@@ -26,6 +26,10 @@ The project is intended to be portable as one working block: the app code, workf
 +-- requirements.txt
 +-- run.bat
 +-- shutdown_run.bat
++-- docs/
+|   +-- checklist.html
+|   +-- favicon.svg
+|   +-- open_checklist.bat
 +-- prompts/
 |   +-- prompt_image.txt
 +-- workflows/
@@ -44,8 +48,32 @@ The project is intended to be portable as one working block: the app code, workf
 - `shutdown_run.bat`: same generation flow plus delayed Windows shutdown.
 - `main.py`: single Python client for all workflows.
 - `docs/checklist.html`: interactive first-use checklist. Progress is stored in the browser with localStorage.
+- `docs/open_checklist.bat`: convenience launcher for the checklist page.
 
 There used to be one Python script per workflow. That was intentionally consolidated into `main.py`.
+
+## First-Use Checklist
+
+The first-use checklist lives in:
+
+```text
+docs/checklist.html
+```
+
+It is a standalone browser page with a cyber/neon aesthetic, animated scanlines/grid, progress persistence through `localStorage`, clickable model download links, and a completion state that shifts the background toward green. It includes a visible reset button at the bottom.
+
+Only the checkbox square should toggle an item. The text, paths, commands, and model links must remain selectable/copyable.
+
+The page uses:
+
+```text
+docs/favicon.svg
+docs/open_checklist.bat
+```
+
+`open_checklist.bat` opens the HTML in the default browser and is intended as the simple double-click entry point for setup.
+
+The checklist header intentionally suggests giving `AGENTS.md` to Codex or another AI assistant so a new user can get project-aware help.
 
 ## Workflow Tags
 

@@ -4,540 +4,941 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Image Generator - Setup Checklist</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ROOT
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 :root {
-  --bg: #070914;
-  --panel: #101522;
-  --panel2: #151c2d;
-  --text: #d7e2f2;
-  --muted: #8090aa;
-  --dim: #4c5870;
-  --accent: #37d5ff;
-  --accent2: #6df0a4;
-  --warn: #ffcb65;
-  --border: rgba(255,255,255,0.1);
-  --shadow: rgba(0,0,0,0.35);
-  font-family: Inter, Segoe UI, Arial, sans-serif;
+  --bg:        #02030d;
+  --bg2:       #050818;
+  --bg3:       #080c1e;
+  --neon:      #00f5ff;
+  --neon2:     #0af;
+  --neon3:     #006eff;
+  --pink:      #ff00aa;
+  --pink2:     #cc0088;
+  --green:     #00ff88;
+  --green2:    #00cc66;
+  --yellow:    #ffe600;
+  --text:      #c8d8f0;
+  --text2:     #6878a0;
+  --text3:     #2a3050;
+  --border:    rgba(0,245,255,0.12);
+  --border2:   rgba(0,245,255,0.28);
+  --mono:      'Share Tech Mono', monospace;
+  --orb:       'Orbitron', sans-serif;
+  --raj:       'Rajdhani', sans-serif;
+  --done-bg:   rgba(0,255,136,0.04);
+  --done-border: rgba(0,255,136,0.2);
 }
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
-  margin: 0;
-  min-height: 100vh;
+  background: var(--bg);
   color: var(--text);
+  font-family: var(--raj);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: default;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
   background:
-    radial-gradient(circle at top left, rgba(55,213,255,0.18), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(109,240,164,0.12), transparent 30%),
-    var(--bg);
+    radial-gradient(circle at 50% 18%, rgba(0,255,136,0.16), transparent 42%),
+    linear-gradient(180deg, rgba(0,70,38,0.28), rgba(0,18,12,0.58));
 }
 
+body.setup-complete::before { opacity: 1; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FLASH CANVAS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+#flash-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SCANLINES
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.scanlines {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   GRID BG
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  transition: background-image 0.8s ease;
+}
+
+body.setup-complete .grid-bg {
+  background-image:
+    linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   LAYOUT
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .page {
-  width: min(980px, calc(100% - 32px));
+  position: relative; z-index: 10;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 48px 0 72px;
+  padding: 60px 28px 80px;
 }
 
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HEADER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .header {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 34px;
+  text-align: center;
+  margin-bottom: 56px;
+  animation: hdr-in 0.8s ease both;
+}
+@keyframes hdr-in {
+  from { opacity:0; transform:translateY(-24px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-.eyebrow {
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+.header-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 5px;
   text-transform: uppercase;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(34px, 6vw, 64px);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-}
-
-.lead {
-  max-width: 720px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-.progress-panel {
-  display: grid;
-  gap: 10px;
-  padding: 18px;
-  margin: 26px 0 40px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(16,21,34,0.78);
-  box-shadow: 0 20px 60px var(--shadow);
-}
-
-.progress-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  color: var(--muted);
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.progress-track {
-  height: 10px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.07);
-}
-
-.progress-fill {
-  width: 0%;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  transition: width 220ms ease;
-}
-
-.section {
-  margin-top: 28px;
-}
-
-.section-title {
+  color: var(--neon);
+  opacity: 0.6;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  margin: 0 0 12px;
-  color: var(--accent);
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+}
+.header-tag::before,
+.header-tag::after {
+  content: '';
+  display: block;
+  width: 40px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--neon));
+}
+.header-tag::after { background: linear-gradient(to left, transparent, var(--neon)); }
+
+.header-title {
+  font-family: var(--orb);
+  font-size: clamp(28px, 6vw, 60px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(0,245,255,0.6),
+    0 0 60px rgba(0,245,255,0.25),
+    0 0 120px rgba(0,245,255,0.1);
+  position: relative;
+  display: inline-block;
+}
+.header-title .accent {
+  color: var(--neon);
+  text-shadow:
+    0 0 10px var(--neon),
+    0 0 30px rgba(0,245,255,0.8),
+    0 0 70px rgba(0,245,255,0.4);
+}
+.header-title .sub {
+  display: block;
+  font-size: 0.45em;
+  font-weight: 500;
+  letter-spacing: 6px;
+  color: var(--neon2);
+  text-shadow: 0 0 14px rgba(0,170,255,0.5);
+  margin-top: 8px;
+  opacity: 0.8;
 }
 
-.section-title::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(55,213,255,0.45), transparent);
+.header-desc {
+  font-family: var(--raj);
+  font-size: 16px;
+  color: var(--text2);
+  margin-top: 20px;
+  letter-spacing: 0.3px;
+  line-height: 1.7;
 }
 
-.checks {
-  display: grid;
+/* Progress bar */
+.progress-wrap {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
 }
-
-.check {
-  display: grid;
-  grid-template-columns: 28px 1fr auto;
-  gap: 14px;
-  align-items: start;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(16,21,34,0.78);
-  cursor: pointer;
-  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
-}
-
-.check:hover {
-  border-color: rgba(55,213,255,0.55);
-  background: rgba(21,28,45,0.9);
-  transform: translateX(2px);
-}
-
-.check.done {
-  border-color: rgba(109,240,164,0.42);
-  background: rgba(20,42,34,0.62);
-}
-
-.box {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(55,213,255,0.55);
-  border-radius: 6px;
-  color: transparent;
+.progress-label {
+  font-family: var(--mono);
   font-size: 10px;
-  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--neon);
+  opacity: 0.6;
+  text-transform: uppercase;
 }
-
-.check.done .box {
-  border-color: var(--accent2);
-  color: var(--accent2);
+.progress-bar {
+  width: 320px; height: 4px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(0,245,255,0.15);
+  position: relative; overflow: hidden;
 }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon3), var(--neon), var(--pink));
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.8));
+  animation: shimmer 1s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:1} }
+.progress-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+}
+.progress-count span { color: var(--neon); }
 
-.step {
-  color: var(--dim);
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION HEADERS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 48px 0 16px;
+  animation: fadeIn 0.5s ease both;
+}
+.section-header:first-of-type { margin-top: 0; }
+.section-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--neon);
+  letter-spacing: 2px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+.section-name {
+  font-family: var(--orb);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 4px;
   text-transform: uppercase;
+  color: var(--neon);
+  text-shadow: 0 0 12px rgba(0,245,255,0.4);
+}
+.section-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(0,245,255,0.3), transparent);
 }
 
-.title {
-  margin-top: 3px;
-  font-size: 17px;
-  font-weight: 750;
-}
-
-.desc {
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.check.done .title {
-  color: var(--muted);
-  text-decoration: line-through;
-  text-decoration-color: rgba(109,240,164,0.5);
-}
-
-.tag {
-  align-self: start;
-  padding: 4px 8px;
-  border: 1px solid rgba(55,213,255,0.24);
-  border-radius: 999px;
-  color: var(--accent);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.check.done .tag {
-  border-color: rgba(109,240,164,0.35);
-  color: var(--accent2);
-}
-
-code {
-  padding: 2px 6px;
-  border: 1px solid rgba(55,213,255,0.18);
-  border-radius: 5px;
-  color: #b7f2ff;
-  background: rgba(55,213,255,0.08);
-  font-family: Consolas, Menlo, monospace;
-  font-size: 0.92em;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.actions {
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CHECK ITEM
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.check-item {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 34px;
-}
-
-button, .button-link {
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-bottom: 6px;
   border: 1px solid var(--border);
-  border-radius: 7px;
-  color: var(--text);
-  background: var(--panel);
-  padding: 10px 14px;
-  font-weight: 750;
+  background: rgba(0,10,30,0.6);
+  cursor: default;
+  user-select: text;
+  transition:
+    border-color 0.25s,
+    background 0.25s,
+    transform 0.15s,
+    box-shadow 0.25s;
+  overflow: hidden;
+  /* mouse glow vars */
+  --ix: 50%; --iy: 50%;
+}
+
+/* Mouse follow glow */
+.check-item::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(200px circle at var(--ix) var(--iy), rgba(0,245,255,0.06), transparent 70%);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; z-index: 0;
+}
+.check-item:hover::before { opacity: 1; }
+
+/* Left accent line */
+.check-item::after {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--neon);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.3s ease;
+}
+.check-item:hover::after { transform: scaleY(1); }
+
+.check-item:hover {
+  border-color: rgba(0,245,255,0.35);
+  background: rgba(0,20,50,0.7);
+  transform: translateX(3px);
+  box-shadow: 0 0 20px rgba(0,245,255,0.06), inset 0 0 20px rgba(0,245,255,0.02);
+}
+
+/* DONE state */
+.check-item.done {
+  border-color: var(--done-border);
+  background: var(--done-bg);
+}
+.check-item.done::after { background: var(--green); transform: scaleY(1); }
+.check-item.done::before {
+  background: radial-gradient(200px circle at var(--ix) var(--iy), rgba(0,255,136,0.05), transparent 70%);
+}
+.check-item.done:hover {
+  border-color: rgba(0,255,136,0.35);
+  background: rgba(0,30,20,0.7);
+  box-shadow: 0 0 20px rgba(0,255,136,0.06);
+}
+
+/* â”€â”€ CHECKBOX â”€â”€ */
+.cb {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border: 1px solid rgba(0,245,255,0.35);
+  background: rgba(0,10,30,0.8);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  margin-top: 1px;
   cursor: pointer;
+  user-select: none;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+.check-item:hover .cb,
+.cb:hover {
+  border-color: var(--neon);
+  box-shadow: 0 0 10px rgba(0,245,255,0.3), inset 0 0 8px rgba(0,245,255,0.06);
+}
+.check-item.done .cb {
+  border-color: var(--green);
+  background: rgba(0,255,136,0.1);
+  box-shadow: 0 0 14px rgba(0,255,136,0.4), inset 0 0 8px rgba(0,255,136,0.1);
 }
 
-button:hover, .button-link:hover {
-  border-color: rgba(55,213,255,0.55);
+/* Check mark â€” draws via stroke-dashoffset */
+.cb svg {
+  width: 14px; height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.cb svg path {
+  stroke: var(--green);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 0.35s ease 0.05s;
+}
+.check-item.done .cb svg { opacity: 1; transform: scale(1); }
+.check-item.done .cb svg path { stroke-dashoffset: 0; }
+
+/* â”€â”€ ITEM CONTENT â”€â”€ */
+.item-body { flex: 1; position: relative; z-index: 1; }
+.item-step {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--neon);
+  opacity: 0.45;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.check-item.done .item-step { color: var(--green); }
+
+.item-title {
+  font-family: var(--raj);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.2px;
+  margin-bottom: 4px;
+  transition: color 0.25s;
+}
+.check-item.done .item-title {
+  color: var(--text2);
+  text-decoration: line-through;
+  text-decoration-color: rgba(0,255,136,0.3);
+}
+.check-item:hover .item-title { color: #fff; }
+.check-item.done:hover .item-title { color: var(--text2); }
+
+.item-desc {
+  font-family: var(--raj);
+  font-size: 14px;
+  color: var(--text3);
+  line-height: 1.6;
+  transition: color 0.25s;
+}
+.check-item:hover .item-desc { color: var(--text2); }
+.check-item.done .item-desc { color: rgba(106,120,160,0.5); }
+
+/* Code tag inside desc */
+.code-tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(0,245,255,0.07);
+  border: 1px solid rgba(0,245,255,0.15);
+  padding: 1px 7px;
+  color: var(--neon);
+  letter-spacing: 0.5px;
+}
+.check-item.done .code-tag { color: rgba(0,245,255,0.3); }
+
+a.code-tag {
+  display: inline-block;
   text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.complete {
+a.code-tag:hover {
+  color: #fff;
+  border-color: rgba(0,245,255,0.5);
+  box-shadow: 0 0 14px rgba(0,245,255,0.18);
+}
+
+/* â”€â”€ STATUS BADGE â”€â”€ */
+.item-badge {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid;
+  position: relative; z-index: 1;
+  align-self: flex-start;
+  margin-top: 2px;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.badge-pending {
+  color: rgba(0,245,255,0.4);
+  border-color: rgba(0,245,255,0.15);
+  background: rgba(0,245,255,0.04);
+}
+.badge-done {
+  color: var(--green);
+  border-color: rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.07);
+  box-shadow: 0 0 8px rgba(0,255,136,0.15);
   display: none;
-  margin-top: 24px;
-  padding: 18px;
-  border: 1px solid rgba(109,240,164,0.36);
-  border-radius: 8px;
-  color: var(--accent2);
-  background: rgba(109,240,164,0.08);
+}
+.check-item.done .badge-pending { display: none; }
+.check-item.done .badge-done    { display: block; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   PARTICLE BURST (YES animation)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.burst-particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: burst-out linear forwards;
+}
+@keyframes burst-out {
+  0%   { transform: translate(0,0) scale(1); opacity: 0.9; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   X PARTICLE (NO â€” uncheck animation)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.uncheck-flash {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pink);
+  letter-spacing: 3px;
+  animation: uncheck-rise 0.7s ease-out forwards;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--pink);
+}
+@keyframes uncheck-rise {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESET BUTTON
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.reset-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+.btn-reset {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--pink);
+  background:
+    linear-gradient(135deg, rgba(255,0,170,0.12), rgba(0,245,255,0.04)),
+    rgba(0,10,30,0.72);
+  border: 1px solid rgba(255,0,170,0.36);
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    0 0 18px rgba(255,0,170,0.12);
+  text-shadow: 0 0 10px rgba(255,0,170,0.55);
+}
+.btn-reset:hover {
+  color: #fff;
+  border-color: rgba(255,0,170,0.7);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    0 0 24px rgba(255,0,170,0.26);
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   COMPLETE BANNER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.complete-banner {
+  display: none;
+  text-align: center;
+  padding: 32px;
+  margin-top: 32px;
+  border: 1px solid rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.04);
+  position: relative;
+  overflow: hidden;
+  animation: banner-in 0.5s ease both;
+}
+.complete-banner.show { display: block; }
+.complete-banner::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+}
+@keyframes banner-in {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.banner-title {
+  font-family: var(--orb);
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 800;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0,255,136,0.5);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.banner-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(0,255,136,0.5);
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
-.complete.show {
-  display: block;
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ANIMATIONS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-@media (max-width: 720px) {
-  .check {
-    grid-template-columns: 28px 1fr;
-  }
+/* Stagger items */
+.check-item { animation: fadeIn 0.5s ease both; }
 
-  .tag {
-    grid-column: 2;
-  }
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+@media (max-width: 600px) {
+  .page { padding: 40px 16px 60px; }
+  .item-badge { display: none; }
+  .progress-bar { width: 240px; }
 }
 </style>
 </head>
 <body>
-<main class="page">
-  <header class="header">
-    <div class="eyebrow">First-use setup</div>
-    <h1>Image Generator Checklist</h1>
-    <p class="lead">A browser-saved setup checklist based on the project README. Check off each item as you prepare the local ComfyUI runner, models, prompts, and workflow tags.</p>
-  </header>
 
-  <section class="progress-panel" aria-label="Checklist progress">
-    <div class="progress-row">
-      <span>Progress</span>
-      <span><span id="doneCount">0</span> / <span id="totalCount">0</span> complete</span>
+<canvas id="flash-canvas"></canvas>
+<div class="scanlines"></div>
+<div class="grid-bg"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-tag">Setup Guide</div>
+    <h1 class="header-title">
+      <span class="accent">IMAGE</span> GENERATOR
+      <span class="sub">Project Checklist</span>
+    </h1>
+    <p class="header-desc">After setup, give AGENTS.md to Codex or another AI assistant so it can understand this project and guide the next user. Progress is saved automatically in your browser.</p>
+
+    <div class="progress-wrap">
+      <div class="progress-label">Progress</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-count"><span id="doneCount">0</span> / <span id="totalCount">0</span> completed</div>
     </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Project Environment</h2>
-    <div class="checks">
-      <article class="check" data-id="project-python">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 01</div>
-          <div class="title">Install Python 3.11</div>
-          <div class="desc">Install Python 3.11 on Windows and verify it with <code>py -3.11 --version</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="project-env">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 02</div>
-          <div class="title">Create the project virtual environment</div>
-          <div class="desc">From the repository root, run <code>py -3.11 -m venv env</code> and activate it with <code>call env\Scripts\activate.bat</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="project-deps">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 03</div>
-          <div class="title">Install project dependencies</div>
-          <div class="desc">With the project environment active, run <code>pip install -r requirements.txt</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">ComfyUI Environment</h2>
-    <div class="checks">
-      <article class="check" data-id="comfy-env">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 04</div>
-          <div class="title">Create the ComfyUI virtual environment</div>
-          <div class="desc">Go to <code>comfy_server\ComfyUI</code>, run <code>py -3.11 -m venv env</code>, then activate it with <code>call env\Scripts\activate.bat</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="comfy-deps">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 05</div>
-          <div class="title">Install ComfyUI dependencies</div>
-          <div class="desc">Inside <code>comfy_server\ComfyUI</code>, run <code>pip install -r requirements.txt</code> with the ComfyUI environment active.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="gpu-torch">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 06</div>
-          <div class="title">Install the correct PyTorch build</div>
-          <div class="desc">If using an NVIDIA GPU, install the PyTorch build matching your CUDA setup before running ComfyUI.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Models</h2>
-    <div class="checks">
-      <article class="check" data-id="checkpoints">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 07</div>
-          <div class="title">Download checkpoint models</div>
-          <div class="desc">Place <code>juggernautXL_ragnarokBy.safetensors</code>, <code>cyberrealistic_final.safetensors</code>, and <code>realvisxlV50_v50LightningBakedvae.safetensors</code> in <code>comfy_server/ComfyUI/models/checkpoints/</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="lora-vae">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 08</div>
-          <div class="title">Download the LoRA and VAE</div>
-          <div class="desc">Place <code>p400_sdxl.safetensors</code> in <code>models/loras/</code> and <code>ae.safetensors</code> in <code>models/vae/</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="gguf-models">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 09</div>
-          <div class="title">Download Flux GGUF files</div>
-          <div class="desc">Place <code>flux1-schnell-Q4_K_S.GGUF</code> in <code>models/unet/</code> and <code>t5-v1_1-xxl-encoder-Q4_K_M.gguf</code> in <code>models/clip/</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Workflows and Prompts</h2>
-    <div class="checks">
-      <article class="check" data-id="custom-nodes">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 10</div>
-          <div class="title">Install required custom nodes</div>
-          <div class="desc">Install missing nodes under <code>comfy_server/ComfyUI/custom_nodes/</code> with ComfyUI Manager or manually based on workflow load errors.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="prompt-example">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 11</div>
-          <div class="title">Review the prompt example</div>
-          <div class="desc">Open <code>prompts/prompt_image.txt</code>. Each non-empty, non-comment line is submitted as one prompt.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="workflow-tags">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 12</div>
-          <div class="title">Review available workflow tags</div>
-          <div class="desc">Run <code>python main.py --list-tags</code> and confirm the available tags: <code>default</code>, <code>flux</code>, <code>cyberrealistic</code>, <code>realvis</code>, and <code>cozy</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Run and Verify</h2>
-    <div class="checks">
-      <article class="check" data-id="run-default">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 13</div>
-          <div class="title">Run the default flow</div>
-          <div class="desc">Launch <code>run.bat</code> from the project root. It starts ComfyUI, waits for readiness, then runs <code>python main.py</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="run-tag">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 14</div>
-          <div class="title">Run a tagged workflow</div>
-          <div class="desc">Try <code>python main.py --tag flux</code>, or pass a direct prompt with <code>python main.py realvis "portrait photo"</code>.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-
-      <article class="check" data-id="verify-output">
-        <div class="box">OK</div>
-        <div>
-          <div class="step">Step 15</div>
-          <div class="title">Verify saved results</div>
-          <div class="desc">Confirm generated images appear in the project-level <code>output/</code> folder. This folder is intentionally ignored by Git.</div>
-        </div>
-        <div class="tag">Pending</div>
-      </article>
-    </div>
-  </section>
-
-  <div class="complete" id="complete">All setup steps are complete.</div>
-
-  <div class="actions">
-    <button id="resetButton" type="button">Reset progress</button>
-    <a class="button-link" href="../README.md">Open README.md</a>
   </div>
-</main>
+
+  <!-- SECTION 01 - PROJECT ENVIRONMENT -->
+  <div class="section-header"><span class="section-num">01</span><span class="section-name">Project Environment</span><span class="section-line"></span></div>
+  <div class="check-item" data-id="project-python"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 01</div><div class="item-title">Install Python 3.11</div><div class="item-desc">Install Python 3.11 on Windows and verify it with <span class="code-tag">py -3.11 --version</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="project-env"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 02</div><div class="item-title">Create Project Environment</div><div class="item-desc">From the project root, run <span class="code-tag">py -3.11 -m venv env</span> and activate it with <span class="code-tag">call env\Scripts\activate.bat</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="project-deps"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 03</div><div class="item-title">Install Project Dependencies</div><div class="item-desc">With the project environment active, run <span class="code-tag">pip install -r requirements.txt</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+
+  <!-- SECTION 02 - COMFYUI ENVIRONMENT -->
+  <div class="section-header"><span class="section-num">02</span><span class="section-name">ComfyUI Environment</span><span class="section-line"></span></div>
+  <div class="check-item" data-id="comfy-env"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 04</div><div class="item-title">Create ComfyUI Environment</div><div class="item-desc">Go to <span class="code-tag">comfy_server\ComfyUI</span>, run <span class="code-tag">py -3.11 -m venv env</span>, then activate it with <span class="code-tag">call env\Scripts\activate.bat</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="comfy-deps"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 05</div><div class="item-title">Install ComfyUI Dependencies</div><div class="item-desc">Inside <span class="code-tag">comfy_server\ComfyUI</span>, run <span class="code-tag">pip install -r requirements.txt</span> with the ComfyUI environment active.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="gpu-torch"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 06</div><div class="item-title">Install GPU PyTorch Build</div><div class="item-desc">If using NVIDIA, install the PyTorch build that matches your CUDA setup before running ComfyUI.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+
+  <!-- SECTION 03 - MODELS -->
+  <div class="section-header"><span class="section-num">03</span><span class="section-name">Models</span><span class="section-line"></span></div>
+  <div class="check-item" data-id="checkpoints"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 07</div><div class="item-title">Download Checkpoints</div><div class="item-desc">Place <a class="code-tag" href="https://civitai.com/models/133005/juggernaut-xl" target="_blank" rel="noopener">juggernautXL_ragnarokBy.safetensors</a>, <a class="code-tag" href="https://civitai.com/models/15003/cyberrealistic" target="_blank" rel="noopener">cyberrealistic_final.safetensors</a>, and <a class="code-tag" href="https://civitai.com/models/139562/realvisxl-v50" target="_blank" rel="noopener">realvisxlV50_v50LightningBakedvae.safetensors</a> in <span class="code-tag">comfy_server/ComfyUI/models/checkpoints/</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="lora-vae"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 08</div><div class="item-title">Download LoRA and VAE</div><div class="item-desc">Place <a class="code-tag" href="https://civitai.com/models/2192396/p400-color-film-or-sdxl-lora" target="_blank" rel="noopener">p400_sdxl.safetensors</a> in <span class="code-tag">models/loras/</span> and <a class="code-tag" href="https://huggingface.co/ffxvs/vae-flux/blob/main/ae.safetensors" target="_blank" rel="noopener">ae.safetensors</a> in <span class="code-tag">models/vae/</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="gguf-models"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 09</div><div class="item-title">Download Flux GGUF Files</div><div class="item-desc">Place <a class="code-tag" href="https://huggingface.co/city96/FLUX.1-schnell-gguf/blob/main/flux1-schnell-Q4_K_S.gguf" target="_blank" rel="noopener">flux1-schnell-Q4_K_S.GGUF</a> in <span class="code-tag">models/unet/</span> and <a class="code-tag" href="https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/blob/main/t5-v1_1-xxl-encoder-Q4_K_M.gguf" target="_blank" rel="noopener">t5-v1_1-xxl-encoder-Q4_K_M.gguf</a> in <span class="code-tag">models/clip/</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+
+  <!-- SECTION 04 - WORKFLOWS AND PROMPTS -->
+  <div class="section-header"><span class="section-num">04</span><span class="section-name">Workflows and Prompts</span><span class="section-line"></span></div>
+  <div class="check-item" data-id="custom-nodes"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 10</div><div class="item-title">Install Required Custom Nodes</div><div class="item-desc">Install missing nodes under <span class="code-tag">comfy_server/ComfyUI/custom_nodes/</span> with ComfyUI Manager or manually based on workflow load errors.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="prompt-example"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 11</div><div class="item-title">Review Prompt Example</div><div class="item-desc">Open <span class="code-tag">prompts/prompt_image.txt</span>. Each non-empty, non-comment line is submitted as one prompt.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="workflow-tags"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 12</div><div class="item-title">Review Available Tags</div><div class="item-desc">Run <span class="code-tag">python main.py --list-tags</span> and confirm the tags: <span class="code-tag">default</span>, <span class="code-tag">flux</span>, <span class="code-tag">cyberrealistic</span>, <span class="code-tag">realvis</span>, and <span class="code-tag">cozy</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+
+  <!-- SECTION 05 - RUN AND VERIFY -->
+  <div class="section-header"><span class="section-num">05</span><span class="section-name">Run and Verify</span><span class="section-line"></span></div>
+  <div class="check-item" data-id="run-default"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 13</div><div class="item-title">Run the Default Flow</div><div class="item-desc">Launch <span class="code-tag">run.bat</span> from the project root. It starts ComfyUI, waits for readiness, then runs <span class="code-tag">python main.py</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="run-tag"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 14</div><div class="item-title">Run a Tagged Workflow</div><div class="item-desc">Try <span class="code-tag">python main.py --tag flux</span> or pass a direct prompt with <span class="code-tag">python main.py realvis &quot;portrait photo&quot;</span>.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+  <div class="check-item" data-id="verify-output"><div class="cb"><svg viewBox="0 0 16 16"><path d="M3 8l4 4 6-7"/></svg></div><div class="item-body"><div class="item-step">Step 15</div><div class="item-title">Verify Saved Results</div><div class="item-desc">Confirm generated images appear in the project-level <span class="code-tag">output/</span> folder. This folder is intentionally ignored by Git.</div></div><div class="item-badge badge-pending">PENDING</div><div class="item-badge badge-done">DONE</div></div>
+
+  <!-- COMPLETE BANNER -->
+  <div class="complete-banner" id="completeBanner"><div class="banner-title">ALL SYSTEMS GO</div><div class="banner-sub">Image Generator - Setup Complete</div></div>
+  <div class="reset-wrap"><button class="btn-reset js-reset-progress" type="button">RESET ALL PROGRESS</button></div>
+
+</div><!-- /page -->
 
 <script>
-const STORAGE_KEY = "imggen_setup_checklist_v2";
-const checks = [...document.querySelectorAll(".check")];
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// FLASH CANVAS â€” neon background flashes
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+const canvas = document.getElementById('flash-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
 
-function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch {
-    return {};
+function resizeCanvas() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Flash state
+const flashes = [];
+let   flashTimer = 0;
+
+// Neon colors for flashes
+const flashColors = [
+  [0,245,255],   // cyan
+  [0,110,255],   // blue
+  [0,245,255],   // cyan (weighted)
+  [80,0,255],    // violet
+];
+
+function triggerFlash() {
+  const color = flashColors[Math.floor(Math.random() * flashColors.length)];
+  const count = Math.random() < 0.3 ? 2 + Math.floor(Math.random() * 2) : 1;
+  let delay = 0;
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      flashes.push({
+        life: 0,
+        maxLife: 5 + Math.random() * 8,
+        peak: 0.04 + Math.random() * 0.07,
+        r: color[0], g: color[1], b: color[2],
+        // random horizontal focus
+        cx: 0.15 + Math.random() * 0.7,
+      });
+    }, delay);
+    delay += 50 + Math.random() * 120;
   }
 }
 
+// Also occasionally draw a horizontal neon streak
+const streaks = [];
+function triggerStreak() {
+  streaks.push({
+    life: 0, maxLife: 12 + Math.random() * 8,
+    y: Math.random() * H,
+    width: 0.2 + Math.random() * 0.6,
+    cx: Math.random(),
+    r: 0, g: 200 + Math.floor(Math.random() * 55), b: 255,
+    peak: 0.18 + Math.random() * 0.14,
+  });
+}
+
+function drawBg() {
+  ctx.clearRect(0, 0, W, H);
+
+  // â”€â”€ Sky flashes â”€â”€
+  flashTimer++;
+  const interval = 140 + Math.random() * 200;
+  if (flashTimer > interval) {
+    triggerFlash();
+    if (Math.random() < 0.4) triggerStreak();
+    flashTimer = 0;
+  }
+
+  // Render flashes
+  for (let i = flashes.length - 1; i >= 0; i--) {
+    const f = flashes[i];
+    f.life++;
+    const t = f.life / f.maxLife;
+    const alpha = (1 - t) * (1 - t) * f.peak;
+    if (alpha < 0.001) { flashes.splice(i, 1); continue; }
+
+    const grd = ctx.createRadialGradient(f.cx * W, H * 0.3, 0, f.cx * W, H * 0.4, W * 0.7);
+    grd.addColorStop(0,   `rgba(${f.r},${f.g},${f.b},${alpha})`);
+    grd.addColorStop(0.4, `rgba(${f.r},${f.g},${f.b},${alpha * 0.4})`);
+    grd.addColorStop(1,   `rgba(${f.r},${f.g},${f.b},0)`);
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Render streaks (horizontal neon lines)
+  for (let i = streaks.length - 1; i >= 0; i--) {
+    const s = streaks[i];
+    s.life++;
+    const t = s.life / s.maxLife;
+    const alpha = (1 - t) * (1 - t) * s.peak;
+    if (alpha < 0.002) { streaks.splice(i, 1); continue; }
+
+    const x0 = (s.cx - s.width / 2) * W;
+    const x1 = (s.cx + s.width / 2) * W;
+    const grd = ctx.createLinearGradient(x0, s.y, x1, s.y);
+    grd.addColorStop(0,   `rgba(${s.r},${s.g},${s.b},0)`);
+    grd.addColorStop(0.5, `rgba(${s.r},${s.g},${s.b},${alpha})`);
+    grd.addColorStop(1,   `rgba(${s.r},${s.g},${s.b},0)`);
+    ctx.strokeStyle = grd;
+    ctx.lineWidth   = 1;
+    ctx.beginPath();
+    ctx.moveTo(x0, s.y);
+    ctx.lineTo(x1, s.y);
+    ctx.stroke();
+  }
+
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// MOUSE GLOW ON ITEMS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+document.querySelectorAll('.check-item').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--ix', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+    el.style.setProperty('--iy', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+  });
+});
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// STORAGE KEY
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+const STORAGE_KEY = 'imggen_setup_checklist_v2';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
 function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// PROGRESS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function updateProgress() {
-  const done = checks.filter((check) => check.classList.contains("done"));
-  const pct = checks.length ? (done.length / checks.length) * 100 : 0;
-  document.getElementById("doneCount").textContent = done.length;
-  document.getElementById("totalCount").textContent = checks.length;
-  document.getElementById("progressFill").style.width = `${pct}%`;
-  document.getElementById("complete").classList.toggle("show", done.length === checks.length);
-  checks.forEach((check) => {
-    const tag = check.querySelector(".tag");
-    tag.textContent = check.classList.contains("done") ? "Done" : "Pending";
-  });
+  const items  = document.querySelectorAll('.check-item');
+  const done   = document.querySelectorAll('.check-item.done');
+  const pct    = items.length ? (done.length / items.length * 100) : 0;
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('doneCount').textContent    = done.length;
+  document.getElementById('totalCount').textContent   = items.length;
+
+  const banner = document.getElementById('completeBanner');
+  const complete = done.length === items.length && items.length > 0;
+  document.body.classList.toggle('setup-complete', complete);
+
+  if (complete) {
+    banner.classList.add('show');
+    triggerCompleteBurst();
+  } else {
+    banner.classList.remove('show');
+  }
 }
 
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// BURST PARTICLES â€” YES (check)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function spawnBurst(x, y) {
+  const colors = ['#00f5ff','#00aaff','#00ff88','#ffffff','#4488ff'];
+  const count  = 12 + Math.floor(Math.random() * 8);
+  for (let i = 0; i < count; i++) {
+    const p  = document.createElement('div');
+    p.className = 'burst-particle';
+    const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+    const dist  = 40 + Math.random() * 80;
+    const dx    = Math.cos(angle) * dist;
+    const dy    = Math.sin(angle) * dist;
+    const size  = 3 + Math.random() * 4;
+    const dur   = 0.4 + Math.random() * 0.35;
+    p.style.cssText = `
+      left:${x}px; top:${y}px;
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      box-shadow:0 0 ${size*2}px currentColor;
+      --dx:${dx}px; --dy:${dy}px;
+      animation-duration:${dur}s;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), dur * 1000 + 50);
+  }
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// UNCHECK FLASH â€” NO (uncheck)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function spawnUncheck(x, y) {
+  const el = document.createElement('div');
+  el.className = 'uncheck-flash';
+  el.textContent = 'X RESET';
+  el.style.cssText = `left:${x - 30}px; top:${y - 10}px;`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 700);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// COMPLETE BURST
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function triggerCompleteBurst() {
+  for (let j = 0; j < 3; j++) {
+    setTimeout(() => {
+      const x = window.innerWidth  * (0.3 + Math.random() * 0.4);
+      const y = window.innerHeight * (0.3 + Math.random() * 0.4);
+      spawnBurst(x, y);
+    }, j * 180);
+  }
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// INIT ITEMS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const state = loadState();
 
-checks.forEach((check) => {
-  if (state[check.dataset.id]) {
-    check.classList.add("done");
-  }
+document.querySelectorAll('.check-item').forEach((el, idx) => {
+  const id = el.dataset.id;
 
-  check.addEventListener("click", () => {
-    const nextState = loadState();
-    check.classList.toggle("done");
-    if (check.classList.contains("done")) {
-      nextState[check.dataset.id] = true;
+  // Stagger entrance animation
+  el.style.animationDelay = (idx * 0.04) + 's';
+
+  // Restore saved state
+  if (state[id]) el.classList.add('done');
+
+  // Click handler
+  el.querySelector('.cb').addEventListener('click', e => {
+    const rect   = e.currentTarget.getBoundingClientRect();
+    const cx     = rect.left + rect.width  * 0.5;
+    const cy     = rect.top  + rect.height * 0.5;
+    const isDone = el.classList.toggle('done');
+
+    // Save
+    const s = loadState();
+    if (isDone) s[id] = true;
+    else        delete s[id];
+    saveState(s);
+
+    // Animate
+    if (isDone) {
+      spawnBurst(cx, cy);
+      // tiny scale bounce
+      el.style.transition = 'none';
+      el.style.transform  = 'translateX(3px) scale(1.01)';
+      setTimeout(() => {
+        el.style.transition = '';
+        el.style.transform  = '';
+      }, 120);
     } else {
-      delete nextState[check.dataset.id];
+      spawnUncheck(e.clientX, e.clientY);
     }
-    saveState(nextState);
+
     updateProgress();
   });
 });
 
-document.getElementById("resetButton").addEventListener("click", () => {
-  localStorage.removeItem(STORAGE_KEY);
-  checks.forEach((check) => check.classList.remove("done"));
-  updateProgress();
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// RESET
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+document.querySelectorAll('.js-reset-progress').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.check-item.done').forEach(el => el.classList.remove('done'));
+    localStorage.removeItem(STORAGE_KEY);
+    updateProgress();
+    // pink flash
+    flashes.push({ life:0, maxLife:6, peak:0.06, r:255, g:0, b:170, cx:0.5 });
+  });
 });
 
+// Initial progress render
 updateProgress();
 </script>
 </body>
