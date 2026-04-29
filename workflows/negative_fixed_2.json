@@ -1,0 +1,833 @@
+{
+    "id": "8c54524b-c8d8-42e5-8985-6b14ce1d6b7b",
+    "revision": 0,
+    "last_node_id": 12,
+    "last_link_id": 24,
+    "nodes": [
+        {
+            "id": 7,
+            "type": "VAEDecode",
+            "pos": [
+                1941.9282700000006,
+                77.27222400000026
+            ],
+            "size": [
+                169.8580078125,
+                46
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "muestras",
+                    "name": "samples",
+                    "type": "LATENT",
+                    "link": 5
+                },
+                {
+                    "localized_name": "vae",
+                    "name": "vae",
+                    "type": "VAE",
+                    "link": 9
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "IMAGEN",
+                    "name": "IMAGE",
+                    "type": "IMAGE",
+                    "links": [
+                        23
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "VAEDecode"
+            },
+            "widgets_values": []
+        },
+        {
+            "id": 3,
+            "type": "CheckpointLoaderSimple",
+            "pos": [
+                -386.9053663636362,
+                183.91040581818186
+            ],
+            "size": [
+                270,
+                98
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "nombre_ckpt",
+                    "name": "ckpt_name",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "ckpt_name"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "MODELO",
+                    "name": "MODEL",
+                    "type": "MODEL",
+                    "links": [
+                        18
+                    ]
+                },
+                {
+                    "localized_name": "CLIP",
+                    "name": "CLIP",
+                    "type": "CLIP",
+                    "links": [
+                        20
+                    ]
+                },
+                {
+                    "localized_name": "VAE",
+                    "name": "VAE",
+                    "type": "VAE",
+                    "links": [
+                        9
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "CheckpointLoaderSimple"
+            },
+            "widgets_values": [
+                "juggernautXL_ragnarokBy.safetensors"
+            ]
+        },
+        {
+            "id": 11,
+            "type": "LoraLoader",
+            "pos": [
+                66.06303384108918,
+                -13.20442470678896
+            ],
+            "size": [
+                290.4380859375,
+                126
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "modelo",
+                    "name": "model",
+                    "type": "MODEL",
+                    "link": 18
+                },
+                {
+                    "localized_name": "clip",
+                    "name": "clip",
+                    "type": "CLIP",
+                    "link": 20
+                },
+                {
+                    "localized_name": "nombre_lora",
+                    "name": "lora_name",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "lora_name"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "fuerza_modelo",
+                    "name": "strength_model",
+                    "type": "FLOAT",
+                    "widget": {
+                        "name": "strength_model"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "fuerza_clip",
+                    "name": "strength_clip",
+                    "type": "FLOAT",
+                    "widget": {
+                        "name": "strength_clip"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "MODELO",
+                    "name": "MODEL",
+                    "type": "MODEL",
+                    "links": [
+                        19
+                    ]
+                },
+                {
+                    "localized_name": "CLIP",
+                    "name": "CLIP",
+                    "type": "CLIP",
+                    "links": [
+                        21,
+                        22
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "LoraLoader"
+            },
+            "widgets_values": [
+                "p400_sdxl.safetensors",
+                0.6,
+                0.5
+            ]
+        },
+        {
+            "id": 8,
+            "type": "SaveImage",
+            "pos": [
+                2592.5273609090923,
+                153.6613149090911
+            ],
+            "size": [
+                270,
+                270
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "imágenes",
+                    "name": "images",
+                    "type": "IMAGE",
+                    "link": 24
+                },
+                {
+                    "localized_name": "prefijo_nombre_archivo",
+                    "name": "filename_prefix",
+                    "type": "STRING",
+                    "widget": {
+                        "name": "filename_prefix"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [],
+            "properties": {},
+            "widgets_values": [
+                "ComfyUI"
+            ]
+        },
+        {
+            "id": 12,
+            "type": "ImageScale",
+            "pos": [
+                2183.4749594609257,
+                97.05617033453262
+            ],
+            "size": [
+                270,
+                130
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "imagen",
+                    "name": "image",
+                    "type": "IMAGE",
+                    "link": 23
+                },
+                {
+                    "localized_name": "metodo_ampliacion",
+                    "name": "upscale_method",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "upscale_method"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "ancho",
+                    "name": "width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "altura",
+                    "name": "height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "recorte",
+                    "name": "crop",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "crop"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "IMAGEN",
+                    "name": "IMAGE",
+                    "type": "IMAGE",
+                    "links": [
+                        24
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "ImageScale"
+            },
+            "widgets_values": [
+                "lanczos",
+                1920,
+                1080,
+                "disabled"
+            ]
+        },
+        {
+            "id": 5,
+            "type": "EmptyLatentImage",
+            "pos": [
+                1056.5694000000021,
+                942.6836939999995
+            ],
+            "size": [
+                270,
+                106
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "ancho",
+                    "name": "width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "altura",
+                    "name": "height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "tamaño_del_lote",
+                    "name": "batch_size",
+                    "type": "INT",
+                    "widget": {
+                        "name": "batch_size"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "LATENTE",
+                    "name": "LATENT",
+                    "type": "LATENT",
+                    "links": [
+                        4
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "EmptyLatentImage"
+            },
+            "widgets_values": [
+                1536,
+                896,
+                1
+            ]
+        },
+        {
+            "id": 4,
+            "type": "CLIPTextEncodeSDXL",
+            "pos": [
+                568.1382699999999,
+                442.4722240000001
+            ],
+            "size": [
+                400,
+                286
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "clip",
+                    "name": "clip",
+                    "type": "CLIP",
+                    "link": 21
+                },
+                {
+                    "localized_name": "width",
+                    "name": "width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "height",
+                    "name": "height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "crop_w",
+                    "name": "crop_w",
+                    "type": "INT",
+                    "widget": {
+                        "name": "crop_w"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "crop_h",
+                    "name": "crop_h",
+                    "type": "INT",
+                    "widget": {
+                        "name": "crop_h"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "target_width",
+                    "name": "target_width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "target_width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "target_height",
+                    "name": "target_height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "target_height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "text_g",
+                    "name": "text_g",
+                    "type": "STRING",
+                    "widget": {
+                        "name": "text_g"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "text_l",
+                    "name": "text_l",
+                    "type": "STRING",
+                    "widget": {
+                        "name": "text_l"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "ACONDICIONAMIENTO",
+                    "name": "CONDITIONING",
+                    "type": "CONDITIONING",
+                    "links": [
+                        3
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "CLIPTextEncodeSDXL"
+            },
+            "widgets_values": [
+                1536,
+                896,
+                0,
+                0,
+                1536,
+                896,
+                "beautiful lady face in her 20s brown hair",
+                ""
+            ]
+        },
+        {
+            "id": 9,
+            "type": "CLIPTextEncodeSDXL",
+            "pos": [
+                565.6749576433218,
+                813.546936131147
+            ],
+            "size": [
+                400,
+                286
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "clip",
+                    "name": "clip",
+                    "type": "CLIP",
+                    "link": 22
+                },
+                {
+                    "localized_name": "width",
+                    "name": "width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "height",
+                    "name": "height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "crop_w",
+                    "name": "crop_w",
+                    "type": "INT",
+                    "widget": {
+                        "name": "crop_w"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "crop_h",
+                    "name": "crop_h",
+                    "type": "INT",
+                    "widget": {
+                        "name": "crop_h"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "target_width",
+                    "name": "target_width",
+                    "type": "INT",
+                    "widget": {
+                        "name": "target_width"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "target_height",
+                    "name": "target_height",
+                    "type": "INT",
+                    "widget": {
+                        "name": "target_height"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "text_g",
+                    "name": "text_g",
+                    "type": "STRING",
+                    "widget": {
+                        "name": "text_g"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "text_l",
+                    "name": "text_l",
+                    "type": "STRING",
+                    "widget": {
+                        "name": "text_l"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "ACONDICIONAMIENTO",
+                    "name": "CONDITIONING",
+                    "type": "CONDITIONING",
+                    "links": [
+                        8
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "CLIPTextEncodeSDXL"
+            },
+            "widgets_values": [
+                1536,
+                896,
+                0,
+                0,
+                1536,
+                896,
+                "worst quality, low quality, lowres, bad anatomy, deformed body, mutation, disfigured, watermark, signature, text, bad hands, extra fingers, missing fingers, fused fingers, too many fingers, extra limbs, extra arms, merged hands, overlapping hands, extra hands, three hands, deformed hands, mutated hands, bad fingers, tangled fingers, impossible hand position, cloned face, deformed face, bad face, asymmetrical eyes, crossed eyes, black eyes, empty eyes, dead eyes, glassy eyes, distorted eyes, extra eyes, floating head, disembodied head, extra pens, two pens, duplicate objects, cartoon, animation, 3d render, clay, toy, pixar, illustration, stylized, painting, plastic skin, smooth skin",
+                ""
+            ]
+        },
+        {
+            "id": 6,
+            "type": "KSampler",
+            "pos": [
+                1526.8982700000001,
+                37.34222400000003
+            ],
+            "size": [
+                270,
+                262
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "localized_name": "modelo",
+                    "name": "model",
+                    "type": "MODEL",
+                    "link": 19
+                },
+                {
+                    "localized_name": "positivo",
+                    "name": "positive",
+                    "type": "CONDITIONING",
+                    "link": 3
+                },
+                {
+                    "localized_name": "negativo",
+                    "name": "negative",
+                    "type": "CONDITIONING",
+                    "link": 8
+                },
+                {
+                    "localized_name": "imagen_latente",
+                    "name": "latent_image",
+                    "type": "LATENT",
+                    "link": 4
+                },
+                {
+                    "localized_name": "semilla",
+                    "name": "seed",
+                    "type": "INT",
+                    "widget": {
+                        "name": "seed"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "pasos",
+                    "name": "steps",
+                    "type": "INT",
+                    "widget": {
+                        "name": "steps"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "cfg",
+                    "name": "cfg",
+                    "type": "FLOAT",
+                    "widget": {
+                        "name": "cfg"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "nombre_muestreador",
+                    "name": "sampler_name",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "sampler_name"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "programador",
+                    "name": "scheduler",
+                    "type": "COMBO",
+                    "widget": {
+                        "name": "scheduler"
+                    },
+                    "link": null
+                },
+                {
+                    "localized_name": "deshacer_ruido",
+                    "name": "denoise",
+                    "type": "FLOAT",
+                    "widget": {
+                        "name": "denoise"
+                    },
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "localized_name": "LATENTE",
+                    "name": "LATENT",
+                    "type": "LATENT",
+                    "links": [
+                        5
+                    ]
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+                756107301094994,
+                "randomize",
+                30,
+                6.5,
+                "dpmpp_2m",
+                "karras",
+                1
+            ]
+        }
+    ],
+    "links": [
+        [
+            3,
+            4,
+            0,
+            6,
+            1,
+            "CONDITIONING"
+        ],
+        [
+            4,
+            5,
+            0,
+            6,
+            3,
+            "LATENT"
+        ],
+        [
+            5,
+            6,
+            0,
+            7,
+            0,
+            "LATENT"
+        ],
+        [
+            8,
+            9,
+            0,
+            6,
+            2,
+            "CONDITIONING"
+        ],
+        [
+            9,
+            3,
+            2,
+            7,
+            1,
+            "VAE"
+        ],
+        [
+            18,
+            3,
+            0,
+            11,
+            0,
+            "MODEL"
+        ],
+        [
+            19,
+            11,
+            0,
+            6,
+            0,
+            "MODEL"
+        ],
+        [
+            20,
+            3,
+            1,
+            11,
+            1,
+            "CLIP"
+        ],
+        [
+            21,
+            11,
+            1,
+            4,
+            0,
+            "CLIP"
+        ],
+        [
+            22,
+            11,
+            1,
+            9,
+            0,
+            "CLIP"
+        ],
+        [
+            23,
+            7,
+            0,
+            12,
+            0,
+            "IMAGE"
+        ],
+        [
+            24,
+            12,
+            0,
+            8,
+            0,
+            "IMAGE"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {
+        "workflowRendererVersion": "LG",
+        "ds": {
+            "scale": 0.620921323059155,
+            "offset": [
+                549.4111547653782,
+                657.3674587499809
+            ]
+        }
+    },
+    "version": 0.4
+}
